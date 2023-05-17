@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # third-party
+    'django_tables2',
     'import_export',
     # project apps
     'core.apps.CoreConfig',

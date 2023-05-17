@@ -1,3 +1,11 @@
-from django.shortcuts import render
+import django_tables2 as tables
 
-# Create your views here.
+from core.models import Country
+from core.tables import CountryTable
+
+
+class CountryTableView(tables.SingleTableView):
+    table_class = CountryTable
+    queryset = Country.objects.all()
+    paginate_by = 15
+    template_name = 'country_list.html'
