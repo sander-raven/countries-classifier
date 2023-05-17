@@ -17,6 +17,10 @@
             <p>На основе "Общероссийского классификатора стран мира".</p>
         </header>
         <main>
+            <form method="get">
+                {{ filter.form.as_p }}
+                <input type="submit" />
+            </form>
             {% render_table table %}
         </main>
         <footer class="border-top mt-3 py-3">
