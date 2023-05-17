@@ -3,7 +3,7 @@ from import_export import fields, resources
 from import_export.admin import ImportExportMixin
 from import_export.widgets import ForeignKeyWidget
 
-from core.models import Region
+from core.models import Region, Country
 
 
 class RegionResource(resources.ModelResource):
@@ -25,6 +25,33 @@ class RegionResource(resources.ModelResource):
         fields = ('name', 'parent', 'order', 'id')
 
 
+class CountryResource(resources.ModelResource):
+    region = fields.Field(
+        column_name='region',
+        attribute='region',
+        widget=ForeignKeyWidget(Region, field='name'),
+    )
+
+    def before_import_row(self, row, **kwargs):
+        region_name = row['region']
+        if region_name:
+            Region.objects.get_or_create(
+                name=region_name, defaults={'name': region_name}
+            )
+
+    class Meta:
+        model = Country
+        fields = (
+            'id',
+            'numeric_code',
+            'short_name',
+            'full_name',
+            'alpha2_code',
+            'alpha3_code',
+            'region',
+        )
+
+
 @admin.register(Region)
 class RegionAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = ('name', 'parent', 'order')
@@ -35,3 +62,42 @@ class RegionAdmin(ImportExportMixin, admin.ModelAdmin):
     readonly_fields = ('id', )
     ordering = ('order', 'name')
     resource_class = RegionResource
+
+
+@admin.register(Country)
+class CountryAdmin(ImportExportMixin, admin.ModelAdmin):
+    list_display = (
+        'numeric_code',
+        'short_name',
+        'full_name',
+        'alpha2_code',
+        'alpha3_code',
+        'region',
+    )
+    list_display_links = ('short_name', 'full_name')
+    search_fields = (
+        'numeric_code',
+        'short_name',
+        'full_name',
+        'alpha2_code',
+        'alpha3_code',
+        'region__name',
+    )
+    list_filter = ('region', )
+    fields = (
+        'id',
+        'numeric_code',
+        'short_name',
+        'full_name',
+        'alpha2_code',
+        'alpha3_code',
+        'region',
+    )
+    readonly_fields = ('id', )
+    ordering = (
+        'numeric_code',
+        'short_name',
+        'alpha2_code',
+        'alpha3_code',
+    )
+    resource_class = CountryResource
