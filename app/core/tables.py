@@ -14,7 +14,8 @@ class CountryTable(tables.Table):
 
     class Meta:
         model = Country
-        template_name = 'django_tables2/bootstrap5-responsive.html'
+        # template_name = 'django_tables2/bootstrap5-responsive.html'
+        template_name = 'tables/bootstrap_htmx.html'
         fields = (
             'numeric_code',
             'flag',

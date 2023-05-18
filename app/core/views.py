@@ -10,5 +10,12 @@ class CountryTableView(SingleTableMixin, FilterView):
     table_class = CountryTable
     model = Country
     filterset_class = CountryFilter
-    paginate_by = 15
-    template_name = 'core/country_list.html'
+    paginate_by = 10
+    # template_name = 'core/country_list.html'
+
+    def get_template_names(self):
+        if self.request.htmx:
+            template_name = 'core/country_list_partial.html'
+        else:
+            template_name = 'core/country_list.html'
+        return template_name
